@@ -11,7 +11,7 @@ Future<void> initApp() async {
   await Hive.initFlutter();
   Hive.registerAdapter(VehicleModelAdapter());
   Hive.registerAdapter(MaintenanceModelAdapter());
-  await Hive.openBox('vehicles');
-  await Hive.openBox('maintenances');
+  await Hive.openBox<VehicleModel>('vehicles');
+  await Hive.openBox<MaintenanceModel>('maintenances');
   Get.put(CarController());
 }

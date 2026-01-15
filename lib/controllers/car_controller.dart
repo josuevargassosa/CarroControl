@@ -15,8 +15,8 @@ class CarController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    _vehicleBox = await Hive.openBox<VehicleModel>('vehicles');
-    _maintenanceBox = await Hive.openBox<MaintenanceModel>('maintenances');
+    _vehicleBox = Hive.box<VehicleModel>('vehicles');
+    _maintenanceBox = Hive.box<MaintenanceModel>('maintenances');
 
     vehicle.value = _vehicleBox.get('vehicle');
     history.assignAll(_maintenanceBox.values);
