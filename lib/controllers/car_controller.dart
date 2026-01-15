@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
 import '../data/models/maintenance_model.dart';
 import '../data/models/vehicle_model.dart';
@@ -27,7 +28,7 @@ class CarController extends GetxController {
       return;
     }
 
-    if (newKm <= currentVehicle.currentKm) {
+    if (newKm < currentVehicle.currentKm) {
       return;
     }
 
@@ -47,6 +48,58 @@ class CarController extends GetxController {
 
     vehicle.value = currentVehicle;
     _vehicleBox.put('vehicle', currentVehicle);
+  }
+
+  void registerVehicle({
+    required String brand,
+    required String model,
+    required int year,
+    required double purchaseCost,
+    required int currentKm,
+  }) {
+    final now = DateTime.now();
+    final newVehicle = VehicleModel(
+      brand: brand,
+      model: model,
+      year: year,
+      purchaseCost: purchaseCost,
+      currentKm: currentKm,
+      lastUpdate: now,
+      dailyKmAverage: 0,
+    );
+    vehicle.value = newVehicle;
+    _vehicleBox.put('vehicle', newVehicle);
+  }
+
+  void addMaintenance({
+    required String title,
+    required double cost,
+    required DateTime date,
+    required int kmAtService,
+  }) {
+    final currentVehicle = vehicle.value;
+    if (currentVehicle == null) {
+      return;
+    }
+
+    if (kmAtService < currentVehicle.currentKm) {
+      return;
+    }
+
+    if (kmAtService > currentVehicle.currentKm) {
+      updateMileage(kmAtService);
+    }
+
+    final maintenance = MaintenanceModel(
+      id: const Uuid().v4(),
+      title: title,
+      cost: cost,
+      date: date,
+      kmAtService: kmAtService,
+    );
+
+    history.insert(0, maintenance);
+    _maintenanceBox.add(maintenance);
   }
 
   DateTime? predictNextService(int intervalKm, int lastServiceKm) {
