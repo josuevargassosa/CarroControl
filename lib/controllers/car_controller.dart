@@ -82,10 +82,6 @@ class CarController extends GetxController {
       return;
     }
 
-    if (kmAtService < currentVehicle.currentKm) {
-      return;
-    }
-
     if (kmAtService > currentVehicle.currentKm) {
       updateMileage(kmAtService);
     }
@@ -98,8 +94,10 @@ class CarController extends GetxController {
       kmAtService: kmAtService,
     );
 
-    history.insert(0, maintenance);
     _maintenanceBox.add(maintenance);
+    history.add(maintenance);
+    history.sort((a, b) => b.date.compareTo(a.date));
+    history.refresh();
   }
 
   DateTime? predictNextService(int intervalKm, int lastServiceKm) {

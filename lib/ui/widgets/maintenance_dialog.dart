@@ -76,9 +76,6 @@ class _MaintenanceDialogState extends State<MaintenanceDialog> {
     if (parsed <= 0) {
       return 'El kilometraje debe ser mayor a 0';
     }
-    if (parsed < widget.currentKm) {
-      return 'El kilometraje no puede ser menor al actual';
-    }
     return null;
   }
 
@@ -101,7 +98,7 @@ class _MaintenanceDialogState extends State<MaintenanceDialog> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? now,
-      firstDate: DateTime(1900),
+      firstDate: DateTime(2010, 1, 1),
       lastDate: now,
     );
     if (picked != null) {
